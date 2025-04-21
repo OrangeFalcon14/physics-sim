@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow-y: hidden;
+}
+
+:root {
+  --hue: 240;
+
+  --primary: hsl(var(--hue), 10%, 15%);
+  --secondary: hsl(var(--hue), 15%, 10%);
+}
+
+#app {
+  height: 100%;
+}
+
+/* D9DCD6
+EC4E20
+6E7DAB
+333333
+ */
