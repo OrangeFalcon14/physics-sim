@@ -5,7 +5,7 @@
 
 <style>
   .objects-tab {
-    width: 20vw;
+    width: 20%;
     background: var(--secondary);
     height: 100%;
   }

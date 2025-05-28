@@ -5,7 +5,7 @@
 
 <style>
   .properties-tab {
-    width: 25vw;
+    width: 25%;
     background: var(--secondary);
     height: 100%;
   }
