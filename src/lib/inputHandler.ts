@@ -1,5 +1,5 @@
 import { inputs, settings } from "../state.svelte";
-import { Body, type PhysicsEngine } from "./physicsEngine";
+import { BlockBody, Body, type PhysicsEngine } from "./physicsEngine";
 
 export class InputHandler {
   canvas: HTMLCanvasElement;
@@ -11,9 +11,8 @@ export class InputHandler {
   listen() {
     this.canvas.addEventListener("mousemove", (event) => {
       let canvasLeft = this.canvas.getBoundingClientRect().left;
-      inputs.mouseCoords.x =
-        event.clientX - canvasLeft - settings.defaultSize.x / 2;
-      inputs.mouseCoords.y = event.clientY - settings.defaultSize.y / 2;
+      inputs.mouseCoords.x = event.clientX - canvasLeft;
+      inputs.mouseCoords.y = event.clientY;
     });
     this.canvas.addEventListener("mousedown", (event) => {
       inputs.mouseDown = true;
@@ -23,7 +22,11 @@ export class InputHandler {
     });
     this.canvas.addEventListener("click", (event) => {
       this.physicsEngine.addBody(
-        new Body(settings.defaultMass, inputs.mouseCoords, settings.defaultSize)
+        new BlockBody(
+          settings.defaultMass,
+          inputs.mouseCoords,
+          settings.defaultSize
+        )
       );
     });
   }

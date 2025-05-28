@@ -4,7 +4,7 @@ export const settings = $state({
   FPS: 60,
   gravity: new Vector2(0, 9.8),
   defaultMass: 10,
-  defaultSize: new Vector2(100, 100),
+  defaultSize: 40,
 });
 
 export const inputs = $state({
