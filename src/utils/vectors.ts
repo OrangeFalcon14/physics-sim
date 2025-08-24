@@ -6,7 +6,7 @@ export class Vector2 {
     this.y = y;
   }
   normalize() {
-    let magnitude = this.x / Math.sqrt(this.x ** 2 + this.y ** 2);
+    let magnitude = Math.sqrt(this.x ** 2 + this.y ** 2);
     return new Vector2(this.x / magnitude, this.y / magnitude);
   }
   length() {

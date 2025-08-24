@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Renderer } from "./renderer";
+  import { Renderer } from "./renderer.svelte";
   import { BlockBody, Body, FloorBody, PhysicsEngine } from "./physicsEngine";
   import { InputHandler } from "./inputHandler";
   import { Vector2 } from "../utils/vectors";
@@ -20,14 +20,24 @@
     renderer = new Renderer(canvas, physicsEngine);
     renderer.start();
 
+    // physicsEngine.addBody(
+    //   new FloorBody(0, new Vector2(0, canvas.height - 400), Math.PI / 4)
+    // );
+    // physicsEngine.addBody(
+    //   new FloorBody(0, new Vector2(0, canvas.height + 400), -Math.PI / 4)
+    // );
     physicsEngine.addBody(
-      new FloorBody(0, new Vector2(0, canvas.height - 200), 0)
+      new FloorBody(0, new Vector2(0, canvas.height - 300), 0)
     );
+
+    // physicsEngine.addBody(
+    //   new FloorBody(0, new Vector2(0, canvas.height - 400), Math.PI / 20)
+    // );
   });
 </script>
 
 <div class="canvas-container">
-  <div class="debug-container">
+  <!-- <div class="debug-container">
     <input
       type="checkbox"
       name="debug"
@@ -38,7 +48,7 @@
       }}
     />
     <label for="debug">Debug</label>
-  </div>
+  </div> -->
   <canvas id="render-canvas"> </canvas>
 </div>
 

@@ -5,9 +5,7 @@
 </script>
 
 <main>
-  <ObjectsTab></ObjectsTab>
   <Canvas></Canvas>
-  <PropertiesTab></PropertiesTab>
 </main>
 
 <style>
