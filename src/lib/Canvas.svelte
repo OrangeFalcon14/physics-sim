@@ -1,18 +1,26 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Renderer } from "./renderer.svelte";
-  import { BlockBody, Body, FloorBody, PhysicsEngine } from "./physicsEngine";
+  import {
+    BlockBody,
+    Body,
+    Cannon,
+    FloorBody,
+    PhysicsEngine,
+  } from "./physicsEngine";
   import { InputHandler } from "./inputHandler";
   import { Vector2 } from "../utils/vectors";
+  import { settings } from "../state.svelte";
 
-  let renderer: Renderer,
-    physicsEngine: PhysicsEngine,
-    inputHandler: InputHandler;
+  export let renderer: Renderer;
+  export let physicsEngine: PhysicsEngine;
+  export let inputHandler: InputHandler;
 
   onMount(() => {
     let canvas = <HTMLCanvasElement>document.querySelector("#render-canvas");
 
     physicsEngine = new PhysicsEngine();
+    settings.physicsEngine = physicsEngine;
 
     inputHandler = new InputHandler(canvas, physicsEngine);
     inputHandler.listen();
@@ -29,6 +37,20 @@
     physicsEngine.addBody(
       new FloorBody(0, new Vector2(0, canvas.height - 300), 0)
     );
+
+    // physicsEngine.addBody(
+    //   new Cannon(
+    //     0,
+    //     new Vector2(100, canvas.height - 300 - 100),
+    //     new Vector2(70, 100),
+    //     400,
+    //     {
+    //       mass: 10,
+    //       radius: 5,
+    //       velocity: new Vector2(1 / 2, -Math.sqrt(3) / 2).scale(100),
+    //     }
+    //   )
+    // );
 
     // physicsEngine.addBody(
     //   new FloorBody(0, new Vector2(0, canvas.height - 400), Math.PI / 20)

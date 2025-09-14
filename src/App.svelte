@@ -2,16 +2,20 @@
   import Canvas from "./lib/Canvas.svelte";
   import ObjectsTab from "./lib/ObjectsTab.svelte";
   import PropertiesTab from "./lib/PropertiesTab.svelte";
+  import CenterPanel from "./lib/CenterPanel.svelte";
 </script>
 
 <main>
-  <Canvas></Canvas>
+  <ObjectsTab></ObjectsTab>
+  <CenterPanel />
+  <PropertiesTab></PropertiesTab>
 </main>
 
 <style>
   main {
-    height: 100%;
+    height: 100vh;
+    width: 100vw;
     display: flex;
-    align-items: center;
+    align-items: stretch;
   }
 </style>

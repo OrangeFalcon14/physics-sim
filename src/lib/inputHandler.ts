@@ -1,4 +1,4 @@
-import { inputs, settings } from "../state.svelte";
+import { inputs, settings, Modes } from "../state.svelte";
 import { Vector2 } from "../utils/vectors";
 import {
   BlockBody,
@@ -31,8 +31,7 @@ export class InputHandler {
       inputs.mouseDown = false;
     });
     this.canvas.addEventListener("click", (event) => {
-      if (!event.shiftKey && !event.altKey) {
-        console.log("clicked");
+      if (inputs.mode == Modes.SpawnBlock) {
         this.physicsEngine.addBody(
           new BlockBody(
             settings.defaultMass,
@@ -40,7 +39,7 @@ export class InputHandler {
             settings.defaultSize
           )
         );
-      } else if (event.altKey) {
+      } else if (inputs.mode == Modes.SpawnWall) {
         if (this.selectedPoint.x == 10000) {
           this.selectedPoint = new Vector2(
             inputs.mouseCoords.x,
@@ -57,7 +56,7 @@ export class InputHandler {
 
           this.selectedPoint = new Vector2(10000, 0);
         }
-      } else {
+      } else if (inputs.mode == Modes.SpawnSpring) {
         if (this.selectedPoint.x == 10000) {
           this.selectedPoint = new Vector2(
             inputs.mouseCoords.x,
@@ -79,6 +78,189 @@ export class InputHandler {
 
           this.selectedPoint = new Vector2(10000, 0);
         }
+      } else if (inputs.mode == Modes.Select) {
+        for (let i = 0; i < this.physicsEngine.bodies.length; i++) {
+          const body = this.physicsEngine.bodies[i];
+          // if ()
+        }
+      }
+    });
+    window.addEventListener("keypress", (event) => {
+      if (event.key == "a") {
+        switch (inputs.mode) {
+          case Modes.Select:
+            inputs.mode = Modes.SpawnBlock;
+            settings.paused = false;
+            break;
+          case Modes.SpawnBlock:
+            inputs.mode = Modes.SpawnSpring;
+            break;
+          case Modes.SpawnSpring:
+            inputs.mode = Modes.SpawnWall;
+            break;
+          case Modes.SpawnWall:
+            inputs.mode = Modes.Select;
+            settings.paused = true;
+            break;
+
+          default:
+            break;
+        }
+      } else if (event.key == "1") {
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 578), new Vector2(668, 87))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
+        );
+      } else if (event.key == "2") {
+        this.physicsEngine.addBody(
+          new BlockBody(
+            30,
+            new Vector2(this.canvas.width / 3, this.canvas.height / 3),
+            40
+          )
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2((2 * this.canvas.width) / 3, this.canvas.height / 3),
+            40,
+            new BlockBody(
+              30,
+              new Vector2(
+                (2 * this.canvas.width) / 3,
+                this.canvas.height / 3 + 100
+              ),
+              40
+            )
+          )
+        );
+      } else if (event.key == "3") {
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 578), new Vector2(668, 87))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2((2 * this.canvas.width) / 3, this.canvas.height / 3),
+            40,
+            new BlockBody(
+              30,
+              new Vector2(
+                (2 * this.canvas.width) / 3,
+                this.canvas.height / 3 + 100
+              ),
+              40
+            )
+          )
+        );
+      } else if (event.key == "4") {
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(182, 570), new Vector2(668, 87))
+        );
+        this.physicsEngine.addBody(
+          new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2(190, 401),
+            40,
+            new BlockBody(30, new Vector2(190 + 500, 401), 40)
+          )
+        );
+        this.physicsEngine.addBody(
+          new BlockBody(40, new Vector2(260, 500), 40)
+        );
+      } else if (event.key == "5") {
+        settings.gravity = new Vector2(0, 0);
+        this.physicsEngine.addBody(
+          new BlockBody(
+            30,
+            new Vector2(225, this.canvas.height / 3),
+            40,
+            new Vector2(20, 0)
+          )
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2(this.canvas.width / 2, this.canvas.height / 3),
+            40,
+            new BlockBody(
+              30,
+              new Vector2(this.canvas.width / 2, this.canvas.height / 3 + 100),
+              40
+            )
+          )
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2(this.canvas.width / 2 + 80, this.canvas.height / 3),
+            40,
+            new BlockBody(
+              30,
+              new Vector2(
+                this.canvas.width / 2 + 80,
+                this.canvas.height / 3 + 100
+              ),
+              40
+            )
+          )
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2(this.canvas.width / 2 + 160, this.canvas.height / 3),
+            40,
+            new BlockBody(
+              30,
+              new Vector2(
+                this.canvas.width / 2 + 160,
+                this.canvas.height / 3 + 100
+              ),
+              40
+            )
+          )
+        );
+        this.physicsEngine.addBody(
+          new SpringBody(
+            30,
+            new Vector2(this.canvas.width / 2 + 240, this.canvas.height / 3),
+            40,
+            new BlockBody(
+              30,
+              new Vector2(
+                this.canvas.width / 2 + 240,
+                this.canvas.height / 3 + 100
+              ),
+              40
+            )
+          )
+        );
       }
     });
   }

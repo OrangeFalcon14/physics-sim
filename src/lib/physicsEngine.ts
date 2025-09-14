@@ -13,8 +13,10 @@ export enum BodyTypes {
 
 export class PhysicsEngine {
   bodies: Array<Body>;
+  count: number;
   constructor() {
     this.bodies = [];
+    this.count = 0;
   }
   update(delta: number) {
     this.bodies.forEach((body1) => {
@@ -35,6 +37,7 @@ export class PhysicsEngine {
       });
       if (body1 instanceof BlockBody) body1.update(delta);
       else if (body1 instanceof SpringBody) body1.update(delta);
+      else if (body1 instanceof Cannon) body1.update(delta, this);
     });
   }
   resolveCollision(body1: Body, body2: Body) {
@@ -180,7 +183,11 @@ export class PhysicsEngine {
             )
         );
       }
-    } else if (body1 instanceof BlockBody && body2 instanceof WallBody) {
+    } else if (
+      body1 instanceof BlockBody &&
+      body2 instanceof WallBody &&
+      !(body2 instanceof Cannon)
+    ) {
       if (
         body1.position.x + body1.radius > body2.position.x &&
         body1.position.x - body1.radius < body2.position.x + body2.size.x &&
@@ -219,7 +226,17 @@ export class PhysicsEngine {
     }
   }
   addBody(body: Body) {
+    body.id = this.count;
     this.bodies.push(body);
+    settings.physicsEngine = settings.physicsEngine;
+    this.count++;
+  }
+  deleteBody(id: number) {
+    let newbodies: Array<Body> = [];
+    for (const body of this.bodies) {
+      if (body.id != id) newbodies.push(body);
+    }
+    this.bodies = newbodies;
   }
 }
 
@@ -229,6 +246,7 @@ export class Body {
   force: Vector2;
   mass: number;
   forces: Array<Vector2>;
+  id: number;
   constructor(
     mass: number,
     pos: Vector2,
@@ -239,6 +257,7 @@ export class Body {
     this.velocity = velocity;
     this.force = new Vector2(0, 0);
     this.forces = [];
+    this.id = -1;
   }
   applyForce(force: Vector2) {
     this.forces.push(force);
@@ -247,9 +266,15 @@ export class Body {
 
 export class BlockBody extends Body {
   radius: number;
-  constructor(mass: number, position: Vector2, radius: number) {
+  constructor(
+    mass: number,
+    position: Vector2,
+    radius: number,
+    velocity?: Vector2
+  ) {
     super(mass, position);
     this.radius = radius;
+    if (velocity != null) this.velocity = velocity;
   }
   update(delta: number) {
     this.applyForce(settings.gravity.scale(this.mass));
@@ -305,5 +330,44 @@ export class WallBody extends Body {
   constructor(mass: number, position: Vector2, size: Vector2) {
     super(mass, position);
     this.size = size;
+  }
+}
+
+export class Cannon extends WallBody {
+  aliveTime: number;
+  cannonBallData: { mass: number; radius: number; velocity: Vector2 };
+  shotInterval: number;
+  constructor(
+    mass: number,
+    position: Vector2,
+    size: Vector2,
+    shotInterval: number,
+    cannonBallData: { mass: number; radius: number; velocity: Vector2 }
+  ) {
+    super(mass, position, size);
+    this.aliveTime = 0;
+    this.shotInterval = shotInterval;
+    this.cannonBallData = cannonBallData;
+  }
+  update(delta: number, physicsEngine: PhysicsEngine) {
+    this.aliveTime += 1;
+    if (this.aliveTime % this.shotInterval == 0) {
+      console.log(this.position.x);
+
+      this.shootCannonball(physicsEngine);
+    }
+  }
+  shootCannonball(physicsEngine: PhysicsEngine) {
+    physicsEngine.addBody(
+      new BlockBody(
+        this.cannonBallData.mass,
+        new Vector2(
+          this.position.x + this.size.x / 2,
+          this.position.y + this.cannonBallData.radius
+        ),
+        this.cannonBallData.radius,
+        this.cannonBallData.velocity
+      )
+    );
   }
 }
