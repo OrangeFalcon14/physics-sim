@@ -28,6 +28,26 @@
     renderer = new Renderer(canvas, physicsEngine);
     renderer.start();
 
+    setTimeout(() => {
+      canvas.width = <number>canvas.parentElement?.clientWidth;
+      canvas.height = <number>canvas.parentElement?.clientHeight;
+    }, 100);
+    setTimeout(() => {
+      canvas.width = <number>canvas.parentElement?.clientWidth;
+      canvas.height = <number>canvas.parentElement?.clientHeight;
+    }, 101);
+    setTimeout(() => {
+      canvas.width = <number>canvas.parentElement?.clientWidth;
+      canvas.height = <number>canvas.parentElement?.clientHeight;
+    }, 102);
+    setTimeout(() => {
+      canvas.width = <number>canvas.parentElement?.clientWidth;
+      canvas.height = <number>canvas.parentElement?.clientHeight;
+    }, 103);
+    setTimeout(() => {
+      canvas.width = <number>canvas.parentElement?.clientWidth;
+      canvas.height = <number>canvas.parentElement?.clientHeight;
+    }, 104);
     // physicsEngine.addBody(
     //   new FloorBody(0, new Vector2(0, canvas.height - 400), Math.PI / 4)
     // );

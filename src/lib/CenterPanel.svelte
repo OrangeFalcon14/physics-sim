@@ -8,6 +8,8 @@
   $effect(() => {
     settings.gravity = new Vector2(0, gravity);
   });
+
+  let count = $state(settings.physicsEngine.count);
 </script>
 
 <main>
@@ -112,15 +114,17 @@
       <div class="canvas-overlay">
         <div class="canvas-info">
           <span>FPS: 60</span>
-          <span>Objects: 5</span>
+          <span>Objects: {count}</span>
           <span>Time: 02:34</span>
         </div>
 
         <div class="canvas-tools">
           <button
             class="btn icon-btn"
+            class:active={inputs.mode == Modes.Select}
             onclick={() => {
               inputs.mode = Modes.Select;
+              settings.paused = true;
             }}
           >
             <svg

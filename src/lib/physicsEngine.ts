@@ -14,9 +14,11 @@ export enum BodyTypes {
 export class PhysicsEngine {
   bodies: Array<Body>;
   count: number;
+  totalCount: number;
   constructor() {
     this.bodies = [];
     this.count = 0;
+    this.totalCount = 0;
   }
   update(delta: number) {
     this.bodies.forEach((body1) => {
@@ -226,10 +228,11 @@ export class PhysicsEngine {
     }
   }
   addBody(body: Body) {
-    body.id = this.count;
+    body.id = this.totalCount;
     this.bodies.push(body);
     settings.physicsEngine = settings.physicsEngine;
     this.count++;
+    this.totalCount++;
   }
   deleteBody(id: number) {
     let newbodies: Array<Body> = [];
@@ -247,6 +250,7 @@ export class Body {
   mass: number;
   forces: Array<Vector2>;
   id: number;
+  color: string;
   constructor(
     mass: number,
     pos: Vector2,
@@ -258,6 +262,7 @@ export class Body {
     this.force = new Vector2(0, 0);
     this.forces = [];
     this.id = -1;
+    this.color = "hsl(240, 30%, 50%)";
   }
   applyForce(force: Vector2) {
     this.forces.push(force);
@@ -297,6 +302,7 @@ export class FloorBody extends Body {
   constructor(mass: number, position: Vector2, angle: number) {
     super(mass, position);
     this.angle = angle;
+    this.color = "hsl(240, 30%, 30%)";
   }
   getNormal() {
     return new Vector2(Math.cos(this.angle), Math.sin(this.angle));
@@ -315,6 +321,7 @@ export class SpringBody extends Body {
     super(mass, mean_position);
     this.spring_constant = spring_constant;
     this.body = body;
+    this.color = "hsl(240, 30%, 50%)";
   }
   update(delta: number) {
     let spring_force = this.body.position
@@ -330,6 +337,7 @@ export class WallBody extends Body {
   constructor(mass: number, position: Vector2, size: Vector2) {
     super(mass, position);
     this.size = size;
+    this.color = "hsl(240, 30%, 50%)";
   }
 }
 

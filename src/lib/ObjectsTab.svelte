@@ -69,7 +69,11 @@
 
     <div class="objects-list">
       {#each bodies as body}
-        <div class="object-item" class:selected={body.id == inputs.selectedObj}>
+        <div
+          class="object-item"
+          class:selected={body.id == inputs.selectedObj}
+          onclick={() => (inputs.selectedObj = body.id)}
+        >
           <div class="object-info">
             <div
               class="object-icon"
@@ -138,6 +142,7 @@
           class:active={inputs.mode == Modes.SpawnWall}
           onclick={() => {
             inputs.mode = Modes.SpawnWall;
+            inputs.selectedObj = -1;
           }}
         >
           <svg
@@ -156,6 +161,7 @@
           class:active={inputs.mode == Modes.SpawnBlock}
           onclick={() => {
             inputs.mode = Modes.SpawnBlock;
+            inputs.selectedObj = -1;
           }}
         >
           <svg
@@ -174,6 +180,7 @@
           class:active={inputs.mode == Modes.SpawnSpring}
           onclick={() => {
             inputs.mode = Modes.SpawnSpring;
+            inputs.selectedObj = -1;
           }}
         >
           <svg

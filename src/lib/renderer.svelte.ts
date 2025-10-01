@@ -1,5 +1,5 @@
 import { Vector2 } from "../utils/vectors";
-import { settings } from "../state.svelte";
+import { inputs, settings } from "../state.svelte";
 import {
   BlockBody,
   Body,
@@ -61,8 +61,8 @@ export class Renderer {
 
   renderBody(body: Body) {
     if (body instanceof BlockBody) {
-      this.context.fillStyle = "hsl(240, 30%, 50%)";
-      this.context.strokeStyle = "hsl(240, 30%, 50%)";
+      this.context.fillStyle = body.color;
+      this.context.strokeStyle = body.color;
 
       this.context.beginPath();
       this.context.arc(
@@ -84,8 +84,8 @@ export class Renderer {
       //   );
       //   this.context.stroke();
     } else if (body instanceof FloorBody) {
-      this.context.fillStyle = "hsl(240, 30%, 30%)";
-      this.context.strokeStyle = "hsl(240, 30%, 30%)";
+      this.context.fillStyle = body.color;
+      this.context.strokeStyle = body.color;
 
       if (body.angle == Math.PI / 2) {
         this.context.fillRect(
@@ -121,8 +121,8 @@ export class Renderer {
         );
       }
     } else if (body instanceof SpringBody) {
-      this.context.fillStyle = "hsl(240, 30%, 50%)";
-      this.context.strokeStyle = "hsl(240, 30%, 50%)";
+      this.context.fillStyle = body.color;
+      this.context.strokeStyle = body.color;
       let amplitude = Math.sqrt(
         body.body.position.subtract(body.position).length_squared() +
           (body.body.mass * body.body.velocity.length_squared()) /
@@ -133,10 +133,12 @@ export class Renderer {
       // this.context.strokeStyle = `hsl(${
       //   120 - (displacement / amplitude) * 120
       // }, 46.40%, 46.10%)`;
+      this.context.beginPath();
       this.context.moveTo(body.position.x, body.position.y);
       this.context.lineTo(body.body.position.x, body.body.position.y);
 
       this.context.stroke();
+      this.context.closePath();
 
       this.context.fillStyle = "hsl(154, 46.40%, 46.10%)";
 
@@ -144,8 +146,8 @@ export class Renderer {
       this.context.arc(body.position.x, body.position.y, 10, 0, 2 * Math.PI);
       this.context.fill();
 
-      this.context.fillStyle = "hsl(23, 68.80%, 63.50%)";
-      this.context.strokeStyle = "hsl(23, 68.80%, 63.50%)";
+      this.context.fillStyle = body.color;
+      this.context.strokeStyle = "hsla(23, 69%, 64%, 0.00)";
 
       this.context.beginPath();
       this.context.arc(
@@ -159,8 +161,8 @@ export class Renderer {
 
       this.context.strokeStyle = "";
     } else if (body instanceof WallBody) {
-      this.context.fillStyle = "hsl(240, 30%, 50%)";
-      this.context.strokeStyle = "hsl(240, 30%, 50%)";
+      this.context.fillStyle = body.color;
+      this.context.strokeStyle = body.color;
       this.context.fillRect(
         body.position.x,
         body.position.y,

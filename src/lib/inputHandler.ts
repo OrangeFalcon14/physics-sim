@@ -81,7 +81,30 @@ export class InputHandler {
       } else if (inputs.mode == Modes.Select) {
         for (let i = 0; i < this.physicsEngine.bodies.length; i++) {
           const body = this.physicsEngine.bodies[i];
-          // if ()
+          if (body instanceof BlockBody) {
+            if (
+              inputs.mouseCoords.subtract(body.position).length() <= body.radius
+            ) {
+              inputs.selectedObj = body.id;
+            }
+          } else if (body instanceof WallBody) {
+            if (
+              inputs.mouseCoords.x >= body.position.x &&
+              inputs.mouseCoords.x <= body.position.x + body.size.x &&
+              inputs.mouseCoords.y >= body.position.y &&
+              inputs.mouseCoords.y <= body.position.y + body.size.y
+            ) {
+              inputs.selectedObj = body.id;
+            }
+          } else if (body instanceof SpringBody) {
+            if (
+              inputs.mouseCoords.subtract(body.position).length() <= 10 ||
+              inputs.mouseCoords.subtract(body.body.position).length() <=
+                body.body.radius
+            ) {
+              inputs.selectedObj = body.id;
+            }
+          }
         }
       }
     });
@@ -106,95 +129,95 @@ export class InputHandler {
           default:
             break;
         }
-      } else if (event.key == "1") {
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 578), new Vector2(668, 87))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
-        );
-      } else if (event.key == "2") {
-        this.physicsEngine.addBody(
-          new BlockBody(
-            30,
-            new Vector2(this.canvas.width / 3, this.canvas.height / 3),
-            40
-          )
-        );
-        this.physicsEngine.addBody(
-          new SpringBody(
-            30,
-            new Vector2((2 * this.canvas.width) / 3, this.canvas.height / 3),
-            40,
-            new BlockBody(
-              30,
-              new Vector2(
-                (2 * this.canvas.width) / 3,
-                this.canvas.height / 3 + 100
-              ),
-              40
-            )
-          )
-        );
-      } else if (event.key == "3") {
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 578), new Vector2(668, 87))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
-        );
-        this.physicsEngine.addBody(
-          new SpringBody(
-            30,
-            new Vector2((2 * this.canvas.width) / 3, this.canvas.height / 3),
-            40,
-            new BlockBody(
-              30,
-              new Vector2(
-                (2 * this.canvas.width) / 3,
-                this.canvas.height / 3 + 100
-              ),
-              40
-            )
-          )
-        );
-      } else if (event.key == "4") {
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(182, 570), new Vector2(668, 87))
-        );
-        this.physicsEngine.addBody(
-          new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
-        );
-        this.physicsEngine.addBody(
-          new SpringBody(
-            30,
-            new Vector2(190, 401),
-            40,
-            new BlockBody(30, new Vector2(190 + 500, 401), 40)
-          )
-        );
-        this.physicsEngine.addBody(
-          new BlockBody(40, new Vector2(260, 500), 40)
-        );
-      } else if (event.key == "5") {
+        // } else if (event.key == "1") {
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 578), new Vector2(668, 87))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
+        //   );
+        // } else if (event.key == "2") {
+        //   this.physicsEngine.addBody(
+        //     new BlockBody(
+        //       30,
+        //       new Vector2(this.canvas.width / 3, this.canvas.height / 3),
+        //       40
+        //     )
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new SpringBody(
+        //       30,
+        //       new Vector2((2 * this.canvas.width) / 3, this.canvas.height / 3),
+        //       40,
+        //       new BlockBody(
+        //         30,
+        //         new Vector2(
+        //           (2 * this.canvas.width) / 3,
+        //           this.canvas.height / 3 + 100
+        //         ),
+        //         40
+        //       )
+        //     )
+        //   );
+        // } else if (event.key == "3") {
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 578), new Vector2(668, 87))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new SpringBody(
+        //       30,
+        //       new Vector2((2 * this.canvas.width) / 3, this.canvas.height / 3),
+        //       40,
+        //       new BlockBody(
+        //         30,
+        //         new Vector2(
+        //           (2 * this.canvas.width) / 3,
+        //           this.canvas.height / 3 + 100
+        //         ),
+        //         40
+        //       )
+        //     )
+        //   );
+        // } else if (event.key == "4") {
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 114), new Vector2(577, 91))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 114), new Vector2(91, 464))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(182, 570), new Vector2(668, 87))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new WallBody(0, new Vector2(759, 114), new Vector2(91, 464))
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new SpringBody(
+        //       30,
+        //       new Vector2(190, 401),
+        //       40,
+        //       new BlockBody(30, new Vector2(190 + 500, 401), 40)
+        //     )
+        //   );
+        //   this.physicsEngine.addBody(
+        //     new BlockBody(40, new Vector2(260, 500), 40)
+        //   );
+        // } else if (event.key == "5") {
         settings.gravity = new Vector2(0, 0);
         this.physicsEngine.addBody(
           new BlockBody(
