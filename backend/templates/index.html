@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Physics Simulator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <div class="logo">Physics Simulator</div>
+      <div class="nav-links">
+        <a href="/login"
+          ><svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M10 17l5-5-5-5v10zm9-14H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          Login</a
+        >
+        <a href="/logout"
+          ><svg
+            class="icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M16 13v-2H7V8l-5 4 5 4v-3h9zm3-10H5c-1.1 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+            />
+          </svg>
+          Logout</a
+        >
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>Interactive Physics Simulator</h1>
+      <p>Visualize motion, forces, and collisions with ease</p>
+      <a href="/simulator">Launch Simulator</a>
+      <div>
+        <img src="../static/main.png" alt="Physics Simulation Preview" />
+      </div>
+    </section>
+
+    <section class="how-to">
+      <h2>How to Use the Simulator</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">①</div>
+          <h3>Blocks</h3>
+          <p>
+            Left-click anywhere on the canvas to place a block at that location.
+          </p>
+          <img src="../static/blocks.png" alt="Blocks usage" />
+        </div>
+        <div class="step">
+          <div class="step-number">②</div>
+          <h3>Walls</h3>
+          <p>
+            Left-click once to set the top-right corner and left-click again to
+            set the bottom-right corner.
+          </p>
+          <img src="../static/walls.png " alt="Walls usage" />
+        </div>
+        <div class="step">
+          <div class="step-number">③</div>
+          <h3>Springs</h3>
+          <p>
+            Left-click to set the starting point, then left-click again to set
+            the maximum extension point.
+          </p>
+          <img src="../static/springs.png" alt="Springs usage" />
+        </div>
+        <div class="step step-lim">
+          <div class="step-number">④</div>
+          <h3>Selecting and Adding Objects</h3>
+          <p>
+            Use the bottom left panel to choose objects like blocks, walls, or
+            springs and add them to the canvas.
+          </p>
+          <img
+            src="../static/objects.jpeg"
+            alt="Selecting and Adding Objects"
+          />
+        </div>
+        <div class="step step-lim">
+          <div class="step-number">⑤</div>
+          <h3>Changing Object Properties</h3>
+          <p>
+            Use the right-hand panel to adjust properties like mass, length,
+            stiffness, and other parameters of selected objects.
+          </p>
+          <img
+            src="../static/properties.jpeg"
+            alt="Changing Object Properties"
+          />
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 Physics Simulator. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
