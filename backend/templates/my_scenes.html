@@ -1,108 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Scenes - Physics Simulator</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #111;
-        color: #fff;
-      }
-      nav {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 1100px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        z-index: 1000;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(12px);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-      }
-      nav .logo {
-        font-weight: bold;
-        font-size: 20px;
-        color: #fff;
-      }
-      nav .nav-links a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: bold;
-        margin-left: 20px;
-        padding: 6px 12px;
-        border-radius: 6px;
-        transition: background 0.3s;
-      }
-      nav .nav-links a:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-      .container {
-        max-width: 1200px;
-        margin: 120px auto 50px auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-      }
-      .scene-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        padding: 20px;
-        width: 250px;
-        text-align: center;
-        transition: transform 0.3s, box-shadow 0.3s;
-        cursor: pointer;
-      }
-      .scene-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-      }
-      .scene-card h3 {
-        margin-bottom: 10px;
-        font-size: 20px;
-      }
-      .scene-card p {
-        font-size: 14px;
-        color: #ccc;
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <div class="logo">Physics Simulator</div>
-      <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/logout">Logout</a>
-      </div>
-    </nav>
-
-    <div class="container">
-      {% for scene in scenes %}
-      <div class="scene-card" onclick="openScene('{{ scene.id }}')">
-        <h3>Scene {{ scene.id }}</h3>
-        <p>Last Edited: {{ scene.last_edited.strftime('%Y-%m-%d %H:%M') }}</p>
-      </div>
-      {% else %}
-      <p>No scenes found. Start creating some!</p>
-      {% endfor %}
-    </div>
-
-    <script>
-      function openScene(sceneId) {
-        // Open the simulator in a new tab, passing the scene ID
-        window.open(`/simulator?scene_id=${sceneId}`, "_blank");
-      }
-    </script>
-  </body>
-</html>
+{% extends 'base.html' %} {% block title %}My Scenes{% endblock %} {% block
+styles %}
+<style>
+  .container {
+    max-width: 1200px;
+    margin: 120px auto 50px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  .scene-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .scene-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container">
+  {% for scene in scenes %}
+  <div
+    class="scene-card"
+    onclick="window.open('/simulator?scene_id={{ scene.id }}', '_blank')"
+  >
+    <h3>{{ scene.name or 'Untitled Scene' }}</h3>
+    <p>Last edited: {{ scene.last_edited.strftime('%Y-%m-%d %H:%M') }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

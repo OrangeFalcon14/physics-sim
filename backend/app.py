@@ -20,7 +20,8 @@ class User(db.Model):
 class Scene(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    data = db.Column(db.Text, nullable=False)  # store JSON as string
+    name = db.Column(db.String(20))
+    data = db.Column(db.Text, nullable=False)
     last_edited = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
 @app.route('/')
@@ -69,7 +70,7 @@ def get_scenes():
     for scene in user_scenes:
         scenes_list.append({
             'id': scene.id,
-            'data': json.loads(scene.data),  # convert string to JSON
+            'data': json.loads(scene.data),
             'last_edited': scene.last_edited.isoformat()
         })
     return jsonify(scenes_list)
@@ -84,5 +85,5 @@ def my_scenes():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()  # Ensure tables are created before first request
+        db.create_all() 
     app.run(debug=True)
