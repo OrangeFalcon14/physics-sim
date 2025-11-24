@@ -83,7 +83,37 @@ def my_scenes():
     user_scenes = Scene.query.filter_by(user_id=user_id).all()
     return render_template('my_scenes.html', scenes=user_scenes)
 
+@app.route('/save_scene', methods=['POST'])
+def save_scene():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    data = request.get_json()
+
+    if not data or 'scene' not in data:
+        return jsonify({'error': 'Invalid payload'}), 400
+
+    user_id = session['user_id']
+    scene_json = data['scene']
+    scene_name = data.get('name', 'New Scene')
+
+    try:
+        new_scene = Scene(
+            user_id=user_id,
+            name=scene_name,
+            data=json.dumps(scene_json),
+            last_edited=datetime.utcnow()
+        )
+        db.session.add(new_scene)
+        db.session.commit()
+
+        return jsonify({'message': 'Scene saved successfully', 'scene_id': new_scene.id})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all() 
     app.run(debug=True)
+
