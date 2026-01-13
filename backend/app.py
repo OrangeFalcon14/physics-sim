@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
+# from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import json
@@ -9,7 +10,16 @@ app.secret_key = 'supersecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+
+# CORS(app, supports_credentials=True)
+
+
+# app.config.update(
+#     SESSION_COOKIE_SAMESITE="None",  # REQUIRED for cross-origin
+#     SESSION_COOKIE_SECURE=False,  # Must be False for localhost (True in prod with HTTPS)
+# )
 db = SQLAlchemy(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,9 +36,14 @@ class Scene(db.Model):
 
 @app.route('/')
 def home():
-    if 'user_id' in session:
-        return render_template('dashboard.html')
-    return render_template('index.html')
+    print(session)
+    if "user_id" in session:
+        user = User.query.filter_by(id=session["user_id"]).first()
+        print("user:", user)
+        return render_template("index.html", logged_in=True, uid=user.email)
+        # return render_template("dashboard.html")
+    return render_template("index.html", logged_in=False, uid="")
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,52 +83,58 @@ def get_scenes():
     user_scenes = Scene.query.filter_by(user_id=user_id).all()
     scenes_list = []
     for scene in user_scenes:
-        scenes_list.append({
-            'id': scene.id,
-            'data': json.loads(scene.data),
-            'last_edited': scene.last_edited.isoformat()
-        })
+        scenes_list.append(
+            {
+                "id": scene.id,
+                "data": json.loads(scene.data),
+                "last_edited": scene.last_edited.isoformat(),
+            }
+        )
     return jsonify(scenes_list)
 
-@app.route('/my_scenes')
-def my_scenes():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    user_id = session['user_id']
-    user_scenes = Scene.query.filter_by(user_id=user_id).all()
-    return render_template('my_scenes.html', scenes=user_scenes)
 
-@app.route('/save_scene', methods=['POST'])
+@app.route("/my_scenes")
+def my_scenes():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    user_id = session["user_id"]
+    user_scenes = Scene.query.filter_by(user_id=user_id).all()
+    return render_template("my_scenes.html", scenes=user_scenes)
+
+
+@app.route("/save_scene", methods=["POST"])
 def save_scene():
-    if 'user_id' not in session:
-        return jsonify({'error': 'Unauthorized'}), 401
+    if "user_id" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
 
     data = request.get_json()
 
-    if not data or 'scene' not in data:
-        return jsonify({'error': 'Invalid payload'}), 400
+    if not data or "scene" not in data:
+        return jsonify({"error": "Invalid payload"}), 400
 
-    user_id = session['user_id']
-    scene_json = data['scene']
-    scene_name = data.get('name', 'New Scene')
+    user_id = session["user_id"]
+    scene_json = data["scene"]
+    scene_name = data.get("name", "New Scene")
 
     try:
         new_scene = Scene(
             user_id=user_id,
             name=scene_name,
             data=json.dumps(scene_json),
-            last_edited=datetime.utcnow()
+            last_edited=datetime.utcnow(),
         )
         db.session.add(new_scene)
         db.session.commit()
 
-        return jsonify({'message': 'Scene saved successfully', 'scene_id': new_scene.id})
+        return jsonify(
+            {"message": "Scene saved successfully", "scene_id": new_scene.id}
+        )
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     with app.app_context():
-        db.create_all() 
+        db.create_all()
     app.run(debug=True)
-
